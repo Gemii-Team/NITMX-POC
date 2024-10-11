@@ -3,13 +3,14 @@ package main
 import (
 	"fmt"
 
-	_ "github.com/Nxwbtk/NITMX-POC/docs"
 	"time"
+
+	_ "github.com/Nxwbtk/NITMX-POC/docs"
 
 	"github.com/Nxwbtk/NITMX-POC/internal/middlewares"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/swagger"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/swagger"
 
 	config "github.com/Nxwbtk/NITMX-POC/config"
 	auth "github.com/Nxwbtk/NITMX-POC/internal/handler/auth"
@@ -22,7 +23,6 @@ func checkMiddleWare(c *fiber.Ctx) error {
 	fmt.Printf("URL = %s, Method = %s, Time = %s \n", c.OriginalURL(), c.Method(), start)
 	return c.Next()
 }
-
 
 func main() {
 	// fiber instance
@@ -49,13 +49,7 @@ func main() {
 	// routes
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("hello world 🌈")
-		return c.SendString("hello world 🌈")
 	})
-
-	// app listening at PORT: 3000
-	app.Listen(":9999")
-}
-
 
 	// setup routes
 	helloRoutes.SetupHelloRoutes(app)
