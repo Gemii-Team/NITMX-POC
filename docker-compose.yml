@@ -7,14 +7,14 @@ services:
       POSTGRES_PASSWORD: poc
       POSTGRES_DB: poc
     ports:
-      - "5432:5432"
+      - "5424:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
   poc-mongo:
     image: mongo:4.2
     container_name: poc-mongo
     ports:
-      - "27017:27017"
+      - "27018:27017"
     volumes:
       - mongo_data:/data/db
 

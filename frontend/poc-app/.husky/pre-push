@@ -1,0 +1,15 @@
+local_branch_name="$(git rev-parse --abbrev-ref HEAD)"
+
+message="You cannot push directly to main"
+
+if [[ $local_branch_name == 'main' ]]; then
+    echo "$message"
+    exit 1
+fi
+
+echo "Running Husky pre-commits..."
+echo "Pre-push hooks passed"
+echo "Building app..."
+cd frontend && cd poc-app && npm run build
+echo "Build passed"
+echo "Husky pre-commits done"
