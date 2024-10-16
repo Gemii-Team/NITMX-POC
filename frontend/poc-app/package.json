@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "cd .. && husky poc-app/.husky/"
+    "prepare": "cd .. && husky poc-app/.husky"
   },
   "dependencies": {
     "husky": "^9.1.6",
