@@ -29,7 +29,7 @@ func main() {
 
 	app := fiber.New()
 
-	app.Get("/swagger/*", swagger.HandlerDefault)
+	app.Get("/api/v1/docs/*", swagger.HandlerDefault)
 
 	// routes
 
