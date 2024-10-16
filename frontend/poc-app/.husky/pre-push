@@ -11,5 +11,5 @@ echo "Running Husky pre-commits..."
 echo "Pre-push hooks passed"
 echo "Building app..."
 cd frontend && cd poc-app && npm run build
-echo "Build passed test"
+echo "Build passed"
 echo "Husky pre-commits done"
