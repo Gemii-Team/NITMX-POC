@@ -10,6 +10,6 @@ fi
 echo "Running Husky pre-commits..."
 echo "Pre-push hooks passed"
 echo "Building app..."
-cd poc-app && npm run build
+cd frontend && cd poc-app && npm run build
 echo "Build passed test"
 echo "Husky pre-commits done"
