@@ -1,11 +1,7 @@
 "use client";
-
-import Image from "next/image";
-import { useState } from "react";
 import Head from 'next/head';
 
 export default function Home() {
-  const [openModal, setOpenModal] = useState(false);
   
   return (
     <>
