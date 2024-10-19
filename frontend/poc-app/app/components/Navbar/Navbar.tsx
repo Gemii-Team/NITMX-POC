@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useTheme } from '../ThemeProvider';
 
-const Navbar: React.FC = () => {
+const Navbar = () => {
     const { theme, toggleTheme } = useTheme();
 
     const scrollToSection = (id: string) => {
