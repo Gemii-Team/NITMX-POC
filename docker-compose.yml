@@ -1,15 +1,15 @@
 services:
   poc-postgres:
-    image: postgres:12
+    image: postgres:latest
     container_name: poc-db
     environment:
-      POSTGRES_USER: poc
-      POSTGRES_PASSWORD: poc
-      POSTGRES_DB: poc
+      POSTGRES_USER: pocuserpg
+      POSTGRES_PASSWORD: pocpasspg
+      POSTGRES_DB: pocdb
     ports:
-      - "5424:5432"
+      - 5435:5432
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
   poc-mongo:
     image: mongo:4.2
     container_name: poc-mongo
@@ -19,9 +19,5 @@ services:
       - mongo_data:/data/db
 
 volumes:
-  postgres_data:
+  postgres-data:
   mongo_data:
-
-networks:
-  poc-network:
-    driver: bridge

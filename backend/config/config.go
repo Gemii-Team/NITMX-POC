@@ -9,8 +9,13 @@ import (
 
 // Config struct
 type Config struct {
-	Port   string
-	Secret string
+	Port    string
+	Secret  string
+	DB_HOST string
+	DB_USER string
+	DB_PASS string
+	DB_NAME string
+	DB_PORT string
 }
 
 func NewConfig() *Config {
@@ -21,8 +26,13 @@ func NewConfig() *Config {
 	}
 
 	return &Config{
-		Port:   getEnvOrDefault("PORT", "9999"),
-		Secret: getEnvOrThrow("SECRET"),
+		Port:    getEnvOrDefault("PORT", "9999"),
+		Secret:  getEnvOrThrow("SECRET"),
+		DB_HOST: getEnvOrThrow("DB_HOST"),
+		DB_USER: getEnvOrThrow("DB_USER"),
+		DB_PASS: getEnvOrThrow("DB_PASS"),
+		DB_NAME: getEnvOrThrow("DB_NAME"),
+		DB_PORT: getEnvOrDefault("DB_PORT", "5432"),
 	}
 }
 
