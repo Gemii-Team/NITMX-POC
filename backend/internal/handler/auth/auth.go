@@ -115,8 +115,6 @@ func (h *AuthHandler) SignUp(c *fiber.Ctx) error {
 		Role:     "user",
 	}
 
-	fmt.Println(newUser)
-
 	if result := h.DB.Create(&newUser); result.Error != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": "Could not create user",
