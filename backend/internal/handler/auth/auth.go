@@ -1,43 +1,129 @@
 package auth
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
+	"golang.org/x/crypto/bcrypt"
 
 	config "github.com/Nxwbtk/NITMX-POC/config"
+	models "github.com/Nxwbtk/NITMX-POC/internal/models"
+
+	"gorm.io/gorm"
 )
 
-type Users struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+type AuthHandler struct {
+	DB *gorm.DB
 }
 
-var user = Users{
-	Email:    "a@a.com",
-	Password: "123",
+func NewSignInHandler(db *gorm.DB) *AuthHandler {
+	return &AuthHandler{DB: db}
 }
 
-func SignIn(c *fiber.Ctx) error {
-	usr := new(Users)
-	err := c.BodyParser(usr)
+func (h *AuthHandler) SignIn(c *fiber.Ctx) error {
+	var input struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	if err := c.BodyParser(&input); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid input",
+		})
+	}
+
+	if input.Email == "" || input.Password == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Email and password are required",
+		})
+	}
+
+	var user models.User
+	result := h.DB.Where("email = ?", input.Email).First(&user)
+	if result.Error != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "Invalid credentials",
+		})
+	}
+
+	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password))
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).SendString("Body incorrect")
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "Invalid credentials",
+		})
 	}
-	if user.Email != usr.Email || user.Password != usr.Password {
-		return c.Status(fiber.StatusUnauthorized).SendString("Unauthorized")
-	}
+
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
-	claims["email"] = usr.Email
-	claims["role"] = "admin"
+	claims["email"] = user.Email
+	claims["role"] = user.Role
 	claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
+
 	t, err := token.SignedString([]byte(config.NewConfig().Secret))
 	if err != nil {
-		return c.SendStatus(fiber.StatusInternalServerError)
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Could not generate token",
+		})
 	}
+
 	return c.JSON(fiber.Map{
 		"accessToken": t,
+	})
+}
+
+func (h *AuthHandler) SignUp(c *fiber.Ctx) error {
+	var input struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+		Name     string `json:"name"`
+		Tel      string `json:"tel"`
+	}
+
+	if err := c.BodyParser(&input); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid input",
+		})
+	}
+
+	if input.Email == "" || input.Password == "" || input.Name == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Email, password, and name are required",
+		})
+	}
+
+	var existingUser models.User
+	if result := h.DB.Where("email = ?", input.Email).First(&existingUser); result.Error == nil {
+		return c.Status(fiber.StatusConflict).JSON(fiber.Map{
+			"error": "User with this email already exists",
+		})
+	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Could not hash password",
+		})
+	}
+
+	newUser := models.User{
+		Email:    input.Email,
+		Password: string(hashedPassword),
+		Username: input.Name,
+		Tel:      input.Tel,
+		Role:     "user",
+	}
+
+	fmt.Println(newUser)
+
+	if result := h.DB.Create(&newUser); result.Error != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Could not create user",
+		})
+	}
+
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"message": "User created successfully",
 	})
 }
