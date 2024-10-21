@@ -6,7 +6,7 @@ import {
     XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 import {
-    Bell, Settings, ChevronDown, AlertTriangle, DollarSign, Activity, Users
+AlertTriangle, DollarSign, Activity, Users
 } from 'lucide-react';
 
 type MetricCardProps = {
