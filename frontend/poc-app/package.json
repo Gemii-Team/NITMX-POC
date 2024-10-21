@@ -10,10 +10,20 @@
     "prepare": "cd .. && cd .. && husky frontend/poc-app/.husky"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.9.0",
+    "@visx/event": "^3.3.0",
+    "@visx/gradient": "^3.3.0",
+    "@visx/group": "^3.3.0",
+    "@visx/network": "^3.3.0",
+    "@visx/scale": "^3.5.0",
     "lucide-react": "^0.453.0",
     "next": "14.2.15",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-hook-form": "^7.53.1",
+    "recharts": "^2.13.0",
+    "zod": "^3.23.8",
+    "zustand": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^20",

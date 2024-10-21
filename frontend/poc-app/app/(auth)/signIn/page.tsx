@@ -46,10 +46,10 @@ const SignInComponent: React.FC = () => {
     const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
     return (
-        <div className="flex h-screen">
-            <div className="m-auto w-full max-w-4xl rounded-lg bg-white shadow-2xl overflow-hidden transition-all duration-300 ease-in-out">
-                <div className="flex flex-col md:flex-row">
-                    <div className="flex-1 p-8 md:p-12 content-center">
+        <div className="flex h-screen bg-gray-100">
+            <div className="m-auto w-full max-w-4xl h-[550px] bg-white shadow-2xl overflow-hidden rounded-lg">
+                <div className="flex h-full">
+                    <div className="flex-1 p-8 md:p-12 flex flex-col justify-center">
                         <h2 className="mb-6 text-3xl font-bold text-primary">Welcome to EYE</h2>
                         {error && <p className="mb-4 text-sm text-error">{error}</p>}
                         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -109,11 +109,14 @@ const SignInComponent: React.FC = () => {
                             </button>
                         </form>
                     </div>
-                    <div className="hidden md:block w-1/2 relative overflow-hidden">
+                    <div className="hidden md:block w-1/2 relative">
                         <Image
                             src="/images/image.png"
                             alt="Credit cards"
-                            className="absolute inset-0 w-full h-full object-cover"
+                            layout="fill"
+                            objectFit="cover"
+                            quality={100}
+                            priority
                         />
                     </div>
                 </div>
