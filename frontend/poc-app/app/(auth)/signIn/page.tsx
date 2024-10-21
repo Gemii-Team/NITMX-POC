@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import useAuthStore from '@store/useAuthStore';
 
 const loginSchema = z.object({
@@ -36,7 +37,8 @@ const SignInComponent: React.FC = () => {
         try {
             await signIn(data.email, data.password);
             router.push('/dashboard'); 
-        } catch (err) {
+        } catch (error) {
+            console.error(error);
             setError('Invalid email or password. Please try again.');
         }
     };
@@ -108,7 +110,7 @@ const SignInComponent: React.FC = () => {
                         </form>
                     </div>
                     <div className="hidden md:block w-1/2 relative overflow-hidden">
-                        <img
+                        <Image
                             src="/images/image.png"
                             alt="Credit cards"
                             className="absolute inset-0 w-full h-full object-cover"
