@@ -1,10 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { ThemeProvider } from '@components/ThemeProvider';
 
 import Sidebar from './components/sidebar';
 import AppBar from './components/appbar';
+
+import useAuthStore from '../store/useAuthStore';
 
 export default function RootLayout({
     children,
@@ -13,13 +16,25 @@ export default function RootLayout({
 }) {
     const [mounted, setMounted] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const router = useRouter();
+    const { user, loading } = useAuthStore();
 
     useEffect(() => {
         setMounted(true);
     }, []);
 
-    if (!mounted) {
+    useEffect(() => {
+        if (mounted && !loading && !user) {
+            router.push('/signIn');
+        }
+    }, [mounted, loading, user, router]);
+
+    if (!mounted || loading) {
         return null;
+    }
+
+    if (!user) {
+        return null; // or return a loading spinner
     }
 
     const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
