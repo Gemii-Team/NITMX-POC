@@ -3,8 +3,15 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import psycopg2
 from psycopg2.extras import RealDictCursor
+import joblib
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 app = Flask(__name__)
+
+le = LabelEncoder()
+scaler = None
+model = None
 
 # Database credentials
 DB_NAME = "pocdb"
@@ -61,6 +68,43 @@ def internal_error(error):
 @app.route('/')
 def index():
     return jsonify({'message': 'Welcome to the Flask API!'})
+
+# Route to make predictions
+@app.route("/predict", methods=["POST"])
+def predict():
+    global scaler, model
+
+    # Load model, scaler, and columns if not already loaded
+    if model is None:
+        model = joblib.load("model/logistic_regression_model.pkl")
+    if scaler is None:
+        scaler = joblib.load("model/scaler.pkl")
+
+    # Load the columns used during training
+    columns = joblib.load("model/columns.pkl")
+
+    # Get JSON data from request
+    data = request.get_json()
+    df = pd.DataFrame([data])  # Wrap data in a list to ensure a single row DataFrame
+
+    # Preprocess input data
+    df["merchant_channel"] = le.fit_transform(df["merchant_channel"])
+    df = pd.get_dummies(df, columns=["merchant_channel"])
+
+    # Reindex to ensure the same columns as in training
+    df = df.reindex(columns=columns, fill_value=0)
+
+    # Scale the data
+    df_scaled = scaler.transform(df)
+
+    # Make predictions
+    predictions = model.predict(df_scaled)
+    prediction_accuracy = model.score(df_scaled, predictions)
+
+    return jsonify(
+        {"predictions": predictions.tolist(), "accuracy": prediction_accuracy}
+    )
+
 
 if __name__ == '__main__':
     if test_connection():
