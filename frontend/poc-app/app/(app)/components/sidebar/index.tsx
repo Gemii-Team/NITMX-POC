@@ -20,6 +20,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
         { name: 'Settings', icon: Settings, href: '/settings' },
     ];
 
+    function cx(arg0: { 'translate-x-0': boolean; '-translate-x-full': boolean; }) {
+        throw new Error('Function not implemented.');
+    }
+
     return (
         <>
             <button
@@ -28,10 +32,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
             >
                 <Menu />
             </button>
+            ${isOpen ? 'translate-x-0' : '-translate-x-full'}
             <aside className={`
             bg-base-200 w-64 min-h-screen p-4 fixed left-0 top-0 z-10
             transition-transform duration-300 ease-in-out
-            ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+            ${cx({
+                'translate-x-0' : isOpen,
+                '-translate-x-full': !isOpen
+            })}
             lg:translate-x-0 lg:static
             `}>
                 <div className="font-bold text-2xl mb-8 pl-4">DiagnoAlarm</div>
