@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -70,6 +69,8 @@ func (h *AuthHandler) SignIn(c *fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{
 		"accessToken": t,
+		"role":        user.Role,
+		"user":        user.ID,
 	})
 }
 

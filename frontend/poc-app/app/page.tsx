@@ -1,16 +1,9 @@
 "use client";
-import Head from 'next/head';
 
 export default function Home() {
-  
+
   return (
     <>
-      <Head>
-        <title>Your SEO Optimized Title</title>
-        <meta name="description" content="Your SEO description goes here" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
       <section id="home" className="hero min-h-screen bg-base-200">
         <div className="hero-content text-center">
           <div className="max-w-md">
