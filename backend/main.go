@@ -13,7 +13,7 @@ import (
 func main() {
 	fmt.Println("Starting application...")
 
-	db, err := config.SetUpDB()
+	db, err := services.SetUpDB()
 	if err != nil {
 		fmt.Printf("Failed to connect to database: %v\n", err)
 		return
