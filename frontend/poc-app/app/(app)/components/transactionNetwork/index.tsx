@@ -74,8 +74,6 @@ const interpolateColor = (weight: number, minWeight: number, maxWeight: number):
 const TransactionNetwork: React.FC<Props> = ({ data }) => {
 
     const networkRef = useRef<HTMLDivElement>(null);
-    //@ts-ignore
-    const [networkInstance, setNetworkInstance] = useState<Network | null>(null);
     
     const [filters, setFilters] = useState<FilterState>({
         direction: 'all',
@@ -495,7 +493,7 @@ const TransactionNetwork: React.FC<Props> = ({ data }) => {
                         </div>
 
                         {/* Controls */}
-                        <div className="form-control">
+                        {/* <div className="form-control">
                             <label className="label">
                                 <span className="label-text font-medium">Controls</span>
                             </label>
@@ -524,7 +522,7 @@ const TransactionNetwork: React.FC<Props> = ({ data }) => {
                                     Stabilize
                                 </button>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
 
                     {/* Weight Scale */}
