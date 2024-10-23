@@ -1,0 +1,17 @@
+package routes
+
+import (
+	catRoutes "github.com/Nxwbtk/NITMX-POC/internal/routes/cat"
+	helloRoutes "github.com/Nxwbtk/NITMX-POC/internal/routes/hello"
+	noti "github.com/Nxwbtk/NITMX-POC/internal/routes/noti"
+	transactionLogRoutes "github.com/Nxwbtk/NITMX-POC/internal/routes/transactionLog"
+	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
+)
+
+func SetUpRoutes(app *fiber.App, db *gorm.DB) {
+	helloRoutes.SetupHelloRoutes(app)
+	catRoutes.SetupCatRoutes(app)
+	transactionLogRoutes.Transaction(app, db)
+	noti.NotiRoutes(app, db)
+}

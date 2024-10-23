@@ -5,22 +5,14 @@ import (
 	"time"
 
 	_ "github.com/Nxwbtk/NITMX-POC/docs"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 
 	"github.com/Nxwbtk/NITMX-POC/internal/middlewares"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/swagger"
 
 	config "github.com/Nxwbtk/NITMX-POC/config"
 	auth "github.com/Nxwbtk/NITMX-POC/internal/handler/auth"
-	catRoutes "github.com/Nxwbtk/NITMX-POC/internal/routes/cat"
-	helloRoutes "github.com/Nxwbtk/NITMX-POC/internal/routes/hello"
-	noti "github.com/Nxwbtk/NITMX-POC/internal/routes/noti"
-	transactionLogRoutes "github.com/Nxwbtk/NITMX-POC/internal/routes/transactionLog"
-
-	models "github.com/Nxwbtk/NITMX-POC/internal/models"
+	routes "github.com/Nxwbtk/NITMX-POC/internal/routes"
 )
 
 func checkMiddleWare(c *fiber.Ctx) error {
@@ -29,37 +21,15 @@ func checkMiddleWare(c *fiber.Ctx) error {
 	return c.Next()
 }
 
-// @title NITMX POC API
-// @version 1.0
-// @description This is the API documentation for the NITMX POC project
-// @host localhost:3000
-// @BasePath /api/v1
-// @securityDefinitions.apikey BearerAuth
-// @in header
-// @name Authorization
 func main() {
 	fmt.Println("Starting application...")
 
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai",
-		config.NewConfig().DB_HOST,
-		config.NewConfig().DB_USER,
-		config.NewConfig().DB_PASS,
-		config.NewConfig().DB_NAME,
-		config.NewConfig().DB_PORT)
-
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := config.SetUpDB()
 	if err != nil {
 		fmt.Printf("Failed to connect to database: %v\n", err)
 		return
 	}
-
-	if err := db.AutoMigrate(&models.User{}, &models.Cat{}); err != nil {
-		fmt.Printf("Failed to auto-migrate: %v\n", err)
-		return
-	}
-
 	app := fiber.New()
-	app.Get("/api/v1/docs/*", swagger.HandlerDefault)
 
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: "*",
@@ -74,15 +44,12 @@ func main() {
 
 	app.Use(checkMiddleWare)
 	app.Use(middlewares.NewAuthMiddleware(config.NewConfig().Secret))
+
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("hello world 🌈")
+		return c.SendString("This is health check. Server is running.")
 	})
 
-	helloRoutes.SetupHelloRoutes(app)
-	catRoutes.SetupCatRoutes(app)
-	transactionLogRoutes.Transaction(app, db)
-	noti.NotiRoutes(app, db)
-
+	routes.SetUpRoutes(app, db)
 	port := config.NewConfig().Port
 	fmt.Printf("Starting server on port %s\n", port)
 	if err := app.Listen(":" + port); err != nil {

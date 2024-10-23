@@ -8,12 +8,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type NotiMailBody struct {
-	Email   string `json:"email"`
-	Subject string `json:"subject"`
-	Body    string `json:"body"`
-}
-
 func NotiMailPost(db *gorm.DB, c *fiber.Ctx) error {
 	var input struct {
 		Email   string `json:"email"`
@@ -27,7 +21,8 @@ func NotiMailPost(db *gorm.DB, c *fiber.Ctx) error {
 	}
 	if input.Email == "" || input.Subject == "" || input.Body == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "missing required fields",
+			"StatusCode": 400,
+			"Message":    "Email, Subject and Body are required",
 		})
 	}
 	config.ConnectMail()
@@ -38,12 +33,7 @@ func NotiMailPost(db *gorm.DB, c *fiber.Ctx) error {
 	message.SetBody("text/html", input.Body)
 	m.Send(message)
 	return c.JSON(fiber.Map{
-		"message": "NotiMailPost",
-	})
-}
-
-func NotiNoDb(c *fiber.Ctx) error {
-	return c.JSON(fiber.Map{
-		"message": "NotiNoDb",
+		"StatusCode": 200,
+		"Message":    "Email sent successfully",
 	})
 }

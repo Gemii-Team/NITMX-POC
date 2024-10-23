@@ -2,12 +2,16 @@ package config
 
 import (
 	"crypto/tls"
+	"fmt"
 	"log"
 	"os"
 	"strconv"
 
+	"github.com/Nxwbtk/NITMX-POC/internal/models"
 	"github.com/joho/godotenv"
 	"gopkg.in/gomail.v2"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 // Config struct
@@ -83,4 +87,25 @@ func ConnectMail() {
 	mailer.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 
 	Mailer = mailer
+}
+
+func SetUpDB() (*gorm.DB, error) {
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai",
+		NewConfig().DB_HOST,
+		NewConfig().DB_USER,
+		NewConfig().DB_PASS,
+		NewConfig().DB_NAME,
+		NewConfig().DB_PORT)
+
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		fmt.Printf("Failed to connect to database: %v\n", err)
+		return nil, err
+	}
+
+	if err := db.AutoMigrate(&models.User{}, &models.Cat{}); err != nil {
+		fmt.Printf("Failed to auto-migrate: %v\n", err)
+		return nil, err
+	}
+	return db, nil
 }

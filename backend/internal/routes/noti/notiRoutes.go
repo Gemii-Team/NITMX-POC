@@ -13,5 +13,4 @@ func NotiRoutes(router fiber.Router, db *gorm.DB) {
 	routes.Post("/mail", func(c *fiber.Ctx) error {
 		return notiHandler.NotiMailPost(db, c)
 	})
-	routes.Post("/no-db", notiHandler.NotiNoDb)
 }
