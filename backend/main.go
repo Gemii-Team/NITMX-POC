@@ -16,7 +16,7 @@ func main() {
 		fmt.Printf("Failed to connect to database: %v\n", err)
 		return
 	}
-
+  
 	app := services.SetUpFiber(db)
 	routes.SetUpRoutes(app, db)
 	services.SetUpServer(app)

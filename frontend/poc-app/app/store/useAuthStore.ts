@@ -30,7 +30,7 @@ const useAuthStore = create<IAuth>((set) => ({
             });
             set({ 
                 user: data.user, 
-                token: data.token 
+                token: data.accessToken 
             });
         } catch (error) {
             console.error(error);
