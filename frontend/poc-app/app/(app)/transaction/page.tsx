@@ -1,14 +1,11 @@
 "use client"
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useTransaction } from '@store/useTransaction';
-import { formatDistance } from 'date-fns';
-import { Search, Calendar, Filter, Loader2, RefreshCcw } from 'lucide-react';
+import { Search, Filter, Loader2, RefreshCcw } from 'lucide-react';
 import TransactionNetwork from '../components/transactionNetwork';
-import type { ITransaction, ITransactionFilter } from '@store/types/transactions';
 
 const TransactionTable = () => {
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const {
         transactions,
         loading,

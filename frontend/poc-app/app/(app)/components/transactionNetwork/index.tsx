@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
-import { Network, Node, Edge, Options } from 'vis-network/standalone';
-import { AlertCircle, ArrowDownRight, ArrowUpLeft, Filter, ArrowLeftRight } from 'lucide-react';
-import { useTransaction } from '@/app/store/useTransaction';
+import { Network,  Options } from 'vis-network/standalone';
+import { ArrowDownRight, ArrowUpLeft, Filter, ArrowLeftRight } from 'lucide-react';
 
 interface TransactionNode {
     id: string;
