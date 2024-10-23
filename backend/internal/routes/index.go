@@ -10,6 +10,9 @@ import (
 )
 
 func SetUpRoutes(app *fiber.App, db *gorm.DB) {
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("This is health check. Server is running.")
+	})
 	helloRoutes.SetupHelloRoutes(app)
 	catRoutes.SetupCatRoutes(app)
 	transactionLogRoutes.Transaction(app, db)
