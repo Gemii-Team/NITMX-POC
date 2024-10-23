@@ -17,6 +17,7 @@ import (
 	auth "github.com/Nxwbtk/NITMX-POC/internal/handler/auth"
 	catRoutes "github.com/Nxwbtk/NITMX-POC/internal/routes/cat"
 	helloRoutes "github.com/Nxwbtk/NITMX-POC/internal/routes/hello"
+	transactionLogRoutes "github.com/Nxwbtk/NITMX-POC/internal/routes/transactionLog"
 
 	models "github.com/Nxwbtk/NITMX-POC/internal/models"
 )
@@ -71,6 +72,7 @@ func main() {
 
 	helloRoutes.SetupHelloRoutes(app)
 	catRoutes.SetupCatRoutes(app)
+	transactionLogRoutes.Transaction(app, db)
 
 	port := config.NewConfig().Port
 	fmt.Printf("Starting server on port %s\n", port)
