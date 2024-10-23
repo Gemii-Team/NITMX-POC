@@ -16,6 +16,7 @@
     "@visx/group": "^3.3.0",
     "@visx/network": "^3.3.0",
     "@visx/scale": "^3.5.0",
+    "clsx": "^2.1.1",
     "lucide-react": "^0.453.0",
     "next": "14.2.15",
     "react": "^18",
