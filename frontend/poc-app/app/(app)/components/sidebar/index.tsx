@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, Bell, Activity, Settings, Menu } from 'lucide-react';
+import clsx from 'clsx';
 
 interface SidebarProps {
     isOpen: boolean;
@@ -16,14 +17,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
     const navItems = [
         { name: 'Dashboard', icon: Home, href: '/dashboard' },
         { name: 'Alarms', icon: Bell, href: '/alarms' },
-        { name: 'Diagnostics', icon: Activity, href: '/diagnostics' },
+        { name: 'Transaction', icon: Activity, href: '/transaction' },
         { name: 'Settings', icon: Settings, href: '/settings' },
     ];
-
-    function cx(arg0: { 'translate-x-0': boolean; '-translate-x-full': boolean; }) {
-        throw new Error('Function not implemented.');
-    }
-
     return (
         <>
             <button
@@ -32,11 +28,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
             >
                 <Menu />
             </button>
-            ${isOpen ? 'translate-x-0' : '-translate-x-full'}
             <aside className={`
             bg-base-200 w-64 min-h-screen p-4 fixed left-0 top-0 z-10
             transition-transform duration-300 ease-in-out
-            ${cx({
+            ${clsx({
                 'translate-x-0' : isOpen,
                 '-translate-x-full': !isOpen
             })}

@@ -11,7 +11,7 @@ export const fetchClient = async (endpoint: string, options: FetchOptions = {}) 
     const { authRequired = true, ...fetchOptions } = options;
 
     const headers = new Headers(options.headers);
-
+    console.log('token', token);
     if (authRequired && token) {
         headers.set('Authorization', `Bearer ${token}`);
     }

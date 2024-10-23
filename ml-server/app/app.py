@@ -29,7 +29,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-
 def test_connection():
     try:
         conn = psycopg2.connect(
@@ -44,7 +43,6 @@ def test_connection():
     except Exception as e:
         print(f"Database connection error: {e}")
         return False
-
 
 def get_db_connection():
     conn = psycopg2.connect(

@@ -53,13 +53,15 @@ func main() {
 
 	app.Get("/api/v1/docs/*", swagger.HandlerDefault)
 
+	app.Use(cors.New())
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "*",
+		AllowOrigins: "http://localhost:3000",
 		AllowMethods: "GET,POST,HEAD,PUT,DELETE,PATCH",
 		AllowHeaders: "Origin, Content-Type, Accept",
 	}))
 
 	authHandler := auth.NewSignInHandler(db)
+
 	app.Post("/signIn", authHandler.SignIn)
 	app.Post("/signUp", authHandler.SignUp)
 
