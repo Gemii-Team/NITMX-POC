@@ -6,6 +6,7 @@ from psycopg2.extras import RealDictCursor
 import joblib
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder, StandardScaler
+from uuid import uuid4
 
 app = Flask(__name__)
 
@@ -42,7 +43,6 @@ def test_connection():
     except Exception as e:
         print(f"Database connection error: {e}")
         return False
-
 
 def get_db_connection():
     conn = psycopg2.connect(
@@ -100,6 +100,24 @@ def predict():
     # Make predictions
     predictions = model.predict(df_scaled)
     prediction_accuracy = model.score(df_scaled, predictions)
+    id = uuid4()
+    if predictions[0] == 1:
+        # If the prediction is 1, the transaction is fraudulent
+        con = get_db_connection()
+        cur = con.cursor()
+        cur.execute("""INSERT INTO stagging (sending_bank, sending_account_number, receiving_bank, receiving_account_number, merchant_channel, payment_type, amount, id, fraude, acc) VALUES (%s, %s, %s, %s ,%s , %s, %s, %s, %s, %s)"""
+                    , (data['sending_bank'], data['sending_account_number'], data['receiving_bank'], data['receiving_account_number'], data['merchant_channel'], data['payment_type'], data['amount'], id, 1, prediction_accuracy))
+        con.commit()
+        con.close()
+        # api send mail from go lang to the user
+
+    else:
+        con = get_db_connection()
+        cur = con.cursor()
+        cur.execute("""INSERT INTO stagging (sending_bank, sending_account_number, receiving_bank, receiving_account_number, merchant_channel, payment_type, amount, id, fraude, acc) VALUES (%s, %s, %s, %s ,%s , %s, %s, %s, %s, %s)"""
+                    , (data['sending_bank'], data['sending_account_number'], data['receiving_bank'], data['receiving_account_number'], data['merchant_channel'], data['payment_type'], data['amount'], id, 0, prediction_accuracy))
+        con.commit()
+        con.close()
 
     return jsonify(
         {"predictions": predictions.tolist(), "accuracy": prediction_accuracy}
