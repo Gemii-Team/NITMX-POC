@@ -71,10 +71,12 @@ const interpolateColor = (weight: number, minWeight: number, maxWeight: number):
     return `rgb(${r},${g},${b})`;
 };
 
-const TransactionNetwork: React.FC<Props> = ({ data, onNodeSelect }) => {
+const TransactionNetwork: React.FC<Props> = ({ data }) => {
 
     const networkRef = useRef<HTMLDivElement>(null);
+    //@ts-ignore
     const [networkInstance, setNetworkInstance] = useState<Network | null>(null);
+    
     const [filters, setFilters] = useState<FilterState>({
         direction: 'all',
         minWeight: 0,
