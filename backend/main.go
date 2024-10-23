@@ -17,6 +17,7 @@ import (
 	auth "github.com/Nxwbtk/NITMX-POC/internal/handler/auth"
 	catRoutes "github.com/Nxwbtk/NITMX-POC/internal/routes/cat"
 	helloRoutes "github.com/Nxwbtk/NITMX-POC/internal/routes/hello"
+	noti "github.com/Nxwbtk/NITMX-POC/internal/routes/noti"
 	transactionLogRoutes "github.com/Nxwbtk/NITMX-POC/internal/routes/transactionLog"
 
 	models "github.com/Nxwbtk/NITMX-POC/internal/models"
@@ -28,6 +29,14 @@ func checkMiddleWare(c *fiber.Ctx) error {
 	return c.Next()
 }
 
+// @title NITMX POC API
+// @version 1.0
+// @description This is the API documentation for the NITMX POC project
+// @host localhost:3000
+// @BasePath /api/v1
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 func main() {
 	fmt.Println("Starting application...")
 
@@ -50,7 +59,6 @@ func main() {
 	}
 
 	app := fiber.New()
-
 	app.Get("/api/v1/docs/*", swagger.HandlerDefault)
 
 	app.Use(cors.New(cors.Config{
@@ -60,12 +68,12 @@ func main() {
 	}))
 
 	authHandler := auth.NewSignInHandler(db)
+
 	app.Post("/signIn", authHandler.SignIn)
 	app.Post("/signUp", authHandler.SignUp)
 
 	app.Use(checkMiddleWare)
 	app.Use(middlewares.NewAuthMiddleware(config.NewConfig().Secret))
-
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("hello world 🌈")
 	})
@@ -73,6 +81,7 @@ func main() {
 	helloRoutes.SetupHelloRoutes(app)
 	catRoutes.SetupCatRoutes(app)
 	transactionLogRoutes.Transaction(app, db)
+	noti.NotiRoutes(app, db)
 
 	port := config.NewConfig().Port
 	fmt.Printf("Starting server on port %s\n", port)
