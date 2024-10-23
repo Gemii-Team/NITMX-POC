@@ -59,3 +59,11 @@ func SetUpDB() (*gorm.DB, error) {
 	}
 	return db, nil
 }
+
+func SetUpServer(app *fiber.App) {
+	port := config.NewConfig().Port
+	fmt.Printf("Starting server on port %s\n", port)
+	if err := app.Listen(":" + port); err != nil {
+		fmt.Printf("Failed to start server: %v\n", err)
+	}
+}
