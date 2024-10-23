@@ -23,6 +23,7 @@ func checkMiddleWare(c *fiber.Ctx) error {
 func SetUpFiber(db *gorm.DB) *fiber.App {
 	app := fiber.New()
 
+	app.Use(cors.New())
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: "*",
 		AllowMethods: "GET,POST,HEAD,PUT,DELETE,PATCH",
