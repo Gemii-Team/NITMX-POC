@@ -1,4 +1,28 @@
 services:
+  back-end:
+    container_name: backend-poc
+    build:
+      context: ./backend/
+    ports:
+      - 9999:9999
+    networks:
+      - networks
+    env_file:
+      - .env
+    depends_on:
+      - poc-postgres
+  front-end:
+    container_name: frontend-poc
+    build:
+      context: ./frontend/
+    ports:
+      - 3000:3000
+    networks:
+      - networks
+    env_file:
+      - .env
+    depends_on:
+      - back-end
   poc-postgres:
     image: postgres:latest
     container_name: poc-db
@@ -10,14 +34,20 @@ services:
       - 5435:5432
     volumes:
       - postgres-data:/var/lib/postgresql/data
-  poc-mongo:
-    image: mongo:4.2
-    container_name: poc-mongo
-    ports:
-      - "27018:27017"
-    volumes:
-      - mongo_data:/data/db
+    networks:
+      - networks
+  # poc-mongo:
+  #   image: mongo:4.2
+  #   container_name: poc-mongo
+  #   ports:
+  #     - "27018:27017"
+  #   volumes:
+  #     - mongo_data:/data/db
 
 volumes:
   postgres-data:
   mongo_data:
+
+networks:
+  networks:
+    driver: bridge
