@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/bin/sh
 
-local_branch_name="$(git rev-parse --abbrev-ref HEAD)"
+local_branch_name=$(git rev-parse --abbrev-ref HEAD)
 
 # First check main branch protection for all projects
-if [[ $local_branch_name == 'main' ]]; then
+if [ "$local_branch_name" = "main" ]; then
     echo "You cannot push directly to main branch"
     exit 1
 fi
@@ -12,16 +12,18 @@ fi
 changed_files=$(git diff --name-only origin/main...HEAD)
 
 # Check if any frontend files have changed
-has_frontend_changes=false
-while IFS= read -r file; do
-    if [[ $file == frontend/* ]]; then
-        has_frontend_changes=true
-        break
-    fi
-done <<< "$changed_files"
+has_frontend_changes="false"
+for file in $changed_files; do
+    case "$file" in
+        frontend/*)
+            has_frontend_changes="true"
+            break
+            ;;
+    esac
+done
 
 # Only run frontend build if frontend files have changed
-if [[ $has_frontend_changes == true ]]; then
+if [ "$has_frontend_changes" = "true" ]; then
     echo "Frontend changes detected"
     echo "Running Husky pre-commits..."
     echo "Pre-push hooks passed"
