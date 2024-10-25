@@ -132,9 +132,23 @@ func (h *AuthHandler) CodeAuth(c *fiber.Ctx) error {
 		Code string `json:"code"`
 	}
 
+	pass := "EYE@WINNER"
+
+	if err := c.BodyParser(&input); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid input",
+		})
+	}
+
 	if input.Code == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Email and password are required",
+		})
+	}
+
+	if input.Code != pass {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "Invalid credentials",
 		})
 	}
 
