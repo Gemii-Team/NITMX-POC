@@ -1,12 +1,13 @@
-from flask import Flask, jsonify, request
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-import psycopg2
-from psycopg2.extras import RealDictCursor
+from uuid import uuid4
+
 import joblib
 import pandas as pd
+import psycopg2
+from flask import Flask, jsonify, request
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
+from psycopg2.extras import RealDictCursor
 from sklearn.preprocessing import LabelEncoder, StandardScaler
-from uuid import uuid4
 
 app = Flask(__name__)
 
@@ -23,11 +24,12 @@ DB_PORT = "5435"
 
 # SQLAlchemy Database URL
 DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
 
 def test_connection():
     try:
@@ -36,13 +38,14 @@ def test_connection():
             user=DB_USER,
             password=DB_PASSWORD,
             host=DB_HOST,
-            port=DB_PORT
+            port=DB_PORT,
         )
         conn.close()
         return True
     except Exception as e:
         print(f"Database connection error: {e}")
         return False
+
 
 def get_db_connection():
     conn = psycopg2.connect(
@@ -51,23 +54,27 @@ def get_db_connection():
         password=DB_PASSWORD,
         host=DB_HOST,
         port=DB_PORT,
-        cursor_factory=RealDictCursor
+        cursor_factory=RealDictCursor,
     )
     return conn
+
 
 # Error handlers
 @app.errorhandler(404)
 def not_found_error(error):
-    return jsonify({'error': 'Not found'}), 404
+    return jsonify({"error": "Not found"}), 404
+
 
 @app.errorhandler(500)
 def internal_error(error):
     db.session.rollback()
-    return jsonify({'error': 'Internal server error'}), 500
+    return jsonify({"error": "Internal server error"}), 500
 
-@app.route('/')
+
+@app.route("/")
 def index():
-    return jsonify({'message': 'Welcome to the Flask API!'})
+    return jsonify({"message": "Welcome to the Flask API!"})
+
 
 # Route to make predictions
 @app.route("/predict", methods=["POST"])
@@ -99,14 +106,32 @@ def predict():
 
     # Make predictions
     predictions = model.predict(df_scaled)
+
+    # Predict score
+    probabilities = model.predict_proba(df_scaled)
+
     prediction_accuracy = model.score(df_scaled, predictions)
+    max_probabilities = [round(max(prob), 2) for prob in probabilities]
     id = uuid4()
     if predictions[0] == 1:
         # If the prediction is 1, the transaction is fraudulent
         con = get_db_connection()
         cur = con.cursor()
-        cur.execute("""INSERT INTO stagging (sending_bank, sending_account_number, receiving_bank, receiving_account_number, merchant_channel, payment_type, amount, id, fraude, acc) VALUES (%s, %s, %s, %s ,%s , %s, %s, %s, %s, %s)"""
-                    , (data['sending_bank'], data['sending_account_number'], data['receiving_bank'], data['receiving_account_number'], data['merchant_channel'], data['payment_type'], data['amount'], id, 1, prediction_accuracy))
+        cur.execute(
+            """INSERT INTO stagging (sending_bank, sending_account_number, receiving_bank, receiving_account_number, merchant_channel, payment_type, amount, id, fraude, acc) VALUES (%s, %s, %s, %s ,%s , %s, %s, %s, %s, %s)""",
+            (
+                data["sending_bank"],
+                data["sending_account_number"],
+                data["receiving_bank"],
+                data["receiving_account_number"],
+                data["merchant_channel"],
+                data["payment_type"],
+                data["amount"],
+                id,
+                1,
+                max_probabilities,
+            ),
+        )
         con.commit()
         con.close()
         # api send mail from go lang to the user
@@ -114,21 +139,33 @@ def predict():
     else:
         con = get_db_connection()
         cur = con.cursor()
-        cur.execute("""INSERT INTO stagging (sending_bank, sending_account_number, receiving_bank, receiving_account_number, merchant_channel, payment_type, amount, id, fraude, acc) VALUES (%s, %s, %s, %s ,%s , %s, %s, %s, %s, %s)"""
-                    , (data['sending_bank'], data['sending_account_number'], data['receiving_bank'], data['receiving_account_number'], data['merchant_channel'], data['payment_type'], data['amount'], id, 0, prediction_accuracy))
+        cur.execute(
+            """INSERT INTO stagging (sending_bank, sending_account_number, receiving_bank, receiving_account_number, merchant_channel, payment_type, amount, id, fraude, acc) VALUES (%s, %s, %s, %s ,%s , %s, %s, %s, %s, %s)""",
+            (
+                data["sending_bank"],
+                data["sending_account_number"],
+                data["receiving_bank"],
+                data["receiving_account_number"],
+                data["merchant_channel"],
+                data["payment_type"],
+                data["amount"],
+                id,
+                0,
+                max_probabilities,
+            ),
+        )
         con.commit()
         con.close()
 
-    return jsonify(
-        {"predictions": predictions.tolist(), "accuracy": prediction_accuracy}
-    )
+    return jsonify({"predictions": predictions.tolist(), "accuracy": max_probabilities})
 
 
-if __name__ == '__main__':
-    if test_connection():
-        print("Database connection successful!")
-        with app.app_context():
-            db.create_all()
-        app.run(debug=True)
-    else:
-        print("Failed to connect to the database. Check your credentials.")
+if __name__ == "__main__":
+    app.run(debug=True)
+    # if test_connection():
+    #     print("Database connection successful!")
+    #     with app.app_context():
+    #         db.create_all()
+    #     app.run(debug=True)
+    # else:
+    #     print("Failed to connect to the database. Check your credentials.")
