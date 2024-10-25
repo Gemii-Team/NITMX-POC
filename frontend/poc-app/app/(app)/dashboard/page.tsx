@@ -1,15 +1,13 @@
 "use client"
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
-    BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
-    XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 import { useDash } from '@store/useDashStore';
 import {
     AlertTriangle, DollarSign, Activity, Users
 } from 'lucide-react';
-import { randomUUID, UUID } from 'crypto';
 type MetricCardProps = {
     icon: React.ReactNode;
     title: string;

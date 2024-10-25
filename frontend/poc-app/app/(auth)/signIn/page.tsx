@@ -22,9 +22,9 @@ const SignInComponent: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [signInWithCode, setSignInWithCode] = useState(false);
-    const [verifyCode, setVerifyCode] = useState<string | null>(null);
-    const [errorVerify, setErrorVerify] = useState<string | null>(null);
-    const [verifyLoading, setVerifyLoading] = useState(false);
+    // const [verifyCode, setVerifyCode] = useState<string | null>(null);
+    // const [errorVerify, setErrorVerify] = useState<string | null>(null);
+    // const [verifyLoading, setVerifyLoading] = useState(false);
 
     const router = useRouter();
     const { signIn, loading } = useAuthStore();
