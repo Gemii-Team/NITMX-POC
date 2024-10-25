@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useAlertStore } from '@store/useAlertStore';
-import { Search, Filter, Loader2, RefreshCcw } from 'lucide-react';
+import { Filter, Loader2, RefreshCcw } from 'lucide-react';
 
 export default function Alarm() {
 

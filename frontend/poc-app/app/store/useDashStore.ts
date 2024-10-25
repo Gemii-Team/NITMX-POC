@@ -19,7 +19,7 @@ interface ITransactionStore {
 
 }
 
-export const useDash = create<ITransactionStore>((set, get) => ({
+export const useDash = create<ITransactionStore>((set) => ({
     stat: { total_transactions: 0, fraud_percentage: 0, caution: 0, warning: 0},
     merchant: {data: []},
     latest: [],
