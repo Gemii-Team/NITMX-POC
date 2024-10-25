@@ -1,20 +1,42 @@
+#!/bin/bash
+
 local_branch_name="$(git rev-parse --abbrev-ref HEAD)"
 
-curdir=$(pwd)
+# First check main branch protection for all projects
+if [[ $local_branch_name == 'main' ]]; then
+    echo "You cannot push directly to main branch"
+    exit 1
+fi
 
-if [[ $curdir == *"frontend"* ]]; then
-    message="You cannot push directly to main"
+# Get the list of changed files between the current branch and origin
+changed_files=$(git diff --name-only origin/main...HEAD)
 
-    if [[ $local_branch_name == 'main' ]]; then
-        echo "$message"
-        exit 1
+# Check if any frontend files have changed
+has_frontend_changes=false
+while IFS= read -r file; do
+    if [[ $file == frontend/* ]]; then
+        has_frontend_changes=true
+        break
     fi
+done <<< "$changed_files"
 
+# Only run frontend build if frontend files have changed
+if [[ $has_frontend_changes == true ]]; then
+    echo "Frontend changes detected"
     echo "Running Husky pre-commits..."
     echo "Pre-push hooks passed"
     echo "Building app..."
-    cd frontend && cd poc-app && npm run build
+    
+    # Store current directory
+    original_dir=$PWD
+    
+    # Navigate to frontend directory, build, and return
+    cd "$(git rev-parse --show-toplevel)/frontend/poc-app" || exit 1
+    npm run build || exit 1
+    cd "$original_dir" || exit 1
+    
     echo "Build passed"
     echo "Husky pre-commits done"
 fi
 
+exit 0
