@@ -1,23 +1,54 @@
 services:
+  back-end:
+    container_name: backend-poc
+    build:
+      context: ./backend/
+    ports:
+      - 9999:9999
+    networks:
+      - networks
+    env_file:
+      - .env
+    depends_on:
+      - poc-postgres
+    restart: always
+  front-end:
+    container_name: frontend-poc
+    build:
+      context: ./frontend/
+    ports:
+      - 3000:9999
+    networks:
+      - networks
+    env_file:
+      - .env
   poc-postgres:
     image: postgres:latest
     container_name: poc-db
     environment:
-      POSTGRES_USER: pocuserpg
-      POSTGRES_PASSWORD: pocpasspg
-      POSTGRES_DB: pocdb
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - 5435:5432
     volumes:
       - postgres-data:/var/lib/postgresql/data
-  poc-mongo:
-    image: mongo:4.2
-    container_name: poc-mongo
-    ports:
-      - "27018:27017"
-    volumes:
-      - mongo_data:/data/db
+    networks:
+      - networks
+    env_file:
+      - .env
+  # poc-mongo:
+  #   image: mongo:4.2
+  #   container_name: poc-mongo
+  #   ports:
+  #     - "27018:27017"
+  #   volumes:
+  #     - mongo_data:/data/db
 
 volumes:
   postgres-data:
   mongo_data:
+
+networks:
+  networks:
+    driver: bridge
