@@ -2,7 +2,7 @@ local_branch_name="$(git rev-parse --abbrev-ref HEAD)"
 
 curdir=$(pwd)
 
-if [[ $curdir == *"frontend/poc-app"* ]]; then
+if [[ $curdir == *"frontend"* ]]; then
     message="You cannot push directly to main"
 
     if [[ $local_branch_name == 'main' ]]; then
