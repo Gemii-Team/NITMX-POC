@@ -32,6 +32,7 @@ func SetUpFiber(db *gorm.DB) *fiber.App {
 
 	authHandler := auth.NewSignInHandler(db)
 
+	app.Post("/signInCode", authHandler.CodeAuth)
 	app.Post("/signIn", authHandler.SignIn)
 	app.Post("/signUp", authHandler.SignUp)
 
