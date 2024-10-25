@@ -126,3 +126,32 @@ func (h *AuthHandler) SignUp(c *fiber.Ctx) error {
 		"message": "User created successfully",
 	})
 }
+
+func (h *AuthHandler) CodeAuth(c *fiber.Ctx) error {
+	var input struct {
+		Code string `json:"code"`
+	}
+
+	if input.Code == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Email and password are required",
+		})
+	}
+
+	token := jwt.New(jwt.SigningMethodHS256)
+	claims := token.Claims.(jwt.MapClaims)
+	claims["email"] = "test@gmail.com"
+	claims["role"] = "user"
+	claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
+
+	t, err := token.SignedString([]byte(config.NewConfig().Secret))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Could not generate token",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"accessToken": t,
+	})
+}

@@ -17,6 +17,11 @@ type User struct {
 	Role     string
 }
 
+type Code struct {
+	gorm.Model
+	CodeId string
+}
+
 type TransactionLog struct {
 	gorm.Model
 	TranDateTime        string  `json:"tran_date_time" db:"tran_date_time"`
