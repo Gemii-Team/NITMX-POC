@@ -58,7 +58,7 @@ spec:
             limits:
               memory: "256Mi"
           ports:
-            - containerPort: 3000
+            - containerPort: 9999
           imagePullPolicy: Always
           env:
           - name: BUILD_TAG
