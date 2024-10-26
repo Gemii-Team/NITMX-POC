@@ -16,8 +16,6 @@ env:
   REGISTRY_NAME: tcoinproject
   HOME: /root
 
-docker tag nitmx-poc-frontend registry.digitalocean.com/tcoinproject/nitmx-poc-frontend
-docker push registry.digitalocean.com/tcoinproject/nitmx-poc-frontend
 jobs:
   build:
     runs-on: self-hosted
