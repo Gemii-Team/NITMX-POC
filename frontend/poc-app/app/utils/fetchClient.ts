@@ -4,7 +4,7 @@ interface FetchOptions extends RequestInit {
     authRequired?: boolean;
 }
 
-const BASE_URL = "https://eyebetaitmx-backend.gemii-coin.com/";
+const BASE_URL = "https://eyebetaitmx-backend.gemii-coin.com";
 
 export const fetchClient = async (endpoint: string, options: FetchOptions = {}) => {
     const { token } = useAuthStore.getState();

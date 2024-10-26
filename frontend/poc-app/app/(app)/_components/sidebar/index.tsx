@@ -37,7 +37,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
             })}
             lg:translate-x-0 lg:static
             `}>
-                <div className="font-bold text-2xl mb-8 pl-4">DiagnoAlarm</div>
+                <div className="font-bold text-2xl mb-8 pl-4">EYE-POC</div>
                 <ul className="menu p-0 [&_li>*]:rounded-md">
                     {navItems.map((item) => (
                         <li key={item.name}>

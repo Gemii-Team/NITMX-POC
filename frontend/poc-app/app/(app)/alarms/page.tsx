@@ -1,9 +1,10 @@
-"use client" 
+"use client"
 
 import React from 'react';
 import { useAlertStore } from '@store/useAlertStore';
-import { Filter, Loader2, RefreshCcw } from 'lucide-react';
-
+import { Filter, Loader2, RefreshCcw, Search } from 'lucide-react';
+import { fraudTransactionNetwork } from './data';
+import TransactionNetwork from '../_components/transactionNetwork';
 export default function Alarm() {
 
     const {
@@ -26,10 +27,32 @@ export default function Alarm() {
         fetchAlert
     ]);
 
-    console.log('transactions', transactions);
+    const [graphData, setGraphData] = React.useState<boolean>(false);
 
     return (
         <div className="w-full space-y-4">
+            {graphData && (
+                <dialog id="transaction_modal" className={`modal ${graphData ? 'modal-open' : ''}`}>
+                    <div className="modal-box w-11/12 max-w-5xl">
+                        <form method="dialog">
+                            <button
+                                className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                                onClick={() => setGraphData(false)}
+                            >
+                                ✕
+                            </button>
+                        </form>
+
+                        <div className="modal-body">
+                            <TransactionNetwork
+                                data={fraudTransactionNetwork}
+                                onNodeSelect={(nodeId) => console.log('Selected Node:', nodeId)}
+                            />
+                        </div>
+
+                    </div>
+                </dialog>
+            )}
             <div className="flex flex-col lg:flex-row gap-4 p-4 bg-base-200 rounded-box">
                 <div className="join">
                     <input
@@ -111,7 +134,7 @@ export default function Alarm() {
                 <table className="table table-zebra">
                     <thead>
                         <tr>
-                            <th>Transaction Time</th>
+                            <th>Transaction id</th>
                             <th>From</th>
                             <th>To</th>
                             <th>Amount</th>
@@ -152,10 +175,7 @@ export default function Alarm() {
                                 <tr key={index} className="hover">
                                     <td className="whitespace-nowrap">
                                         <div className="font-medium">
-                                            {tx.tranDateTime}
-                                        </div>
-                                        <div className="text-sm opacity-50">
-                                            {tx.tranDateTime}
+                                            {tx.id.slice(0, 8)}
                                         </div>
                                     </td>
                                     <td>
@@ -187,6 +207,14 @@ export default function Alarm() {
                                                 Valid
                                             </div>
                                         )}
+                                    </td>
+                                    <td>
+                                        <button
+                                            className="btn btn-sm btn-ghost"
+                                            onClick={() => setGraphData(true)}
+                                        >
+                                            <Search size={20} />
+                                        </button>
                                     </td>
                                 </tr>
                             ))
