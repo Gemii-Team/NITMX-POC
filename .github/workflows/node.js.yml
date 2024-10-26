@@ -48,7 +48,7 @@ jobs:
           docker push registry.digitalocean.com/$REGISTRY_NAME/nitmx-poc-backend
 
       - name: Update deployment file
-        if: github.ref == 'refs/heads/main'
+        # if: github.ref == 'refs/heads/main'
         run: |
           TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<BUILD_TAG>|'${TAG}'|' $GITHUB_WORKSPACE/deployment.yaml
           cat $GITHUB_WORKSPACE/deployment.yaml
