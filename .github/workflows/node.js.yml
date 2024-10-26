@@ -40,7 +40,6 @@ jobs:
 
 
       - name: Push image
-        if: github.ref == 'refs/heads/main'
         run: |
           doctl registry login --expiry-seconds 1200
           docker tag nitmx-poc-frontend registry.digitalocean.com/$REGISTRY_NAME/nitmx-poc-frontend
