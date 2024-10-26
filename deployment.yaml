@@ -62,8 +62,6 @@ spec:
             value: "123456"
           - name: PORT
             value: "9999"
-          - name: SECRET
-            value: "eW9kMTI7EVqZ7BH0b1GxtxtVLMMzZgdl"
           - name: DB_HOST
             value: "db-postgresql-sgp1-43188-do-user-16485585-0.l.db.ondigitalocean.com"
           - name: DB_USER
