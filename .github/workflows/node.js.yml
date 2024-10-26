@@ -35,7 +35,7 @@ jobs:
 
       - name: Build image backend
         run: |
-          cd ../backend
+          cd ./backend
           docker build . --file Dockerfile --tag nitmx-poc-backend --build-arg NODE_OPTIONS=--max-old-space-size=3500
 
 
