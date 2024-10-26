@@ -3,9 +3,9 @@
 import React from 'react';
 import { useTransaction } from '@store/useTransaction';
 import { Search, Filter, Loader2, RefreshCcw } from 'lucide-react';
-import TransactionNetwork from '../components/transactionNetwork';
+import TransactionNetwork from '../_components/transactionNetwork';
 
-const TransactionTable = () => {
+export default function TransactionPage() {
     const {
         transactions,
         loading,
@@ -298,5 +298,3 @@ const TransactionTable = () => {
         </div>
     );
 };
-
-export default TransactionTable;

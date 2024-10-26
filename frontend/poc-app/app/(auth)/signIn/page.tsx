@@ -1,64 +1,69 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import useAuthStore from '@store/useAuthStore';
+import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import useAuthStore from "@store/useAuthStore";
 
 const loginSchema = z.object({
-    email: z.string().email({ message: "Invalid email address" }),
-    password: z.string().min(8, { message: "Password must be at least 8 characters long" }),
+  email: z.string().email({ message: "Invalid email address" }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters long" }),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
-type FormData = LoginFormData
+type FormData = LoginFormData;  
 
-const SignInComponent: React.FC = () => {
-    const [showPassword, setShowPassword] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [signInWithCode, setSignInWithCode] = useState(false);
-    // const [verifyCode, setVerifyCode] = useState<string | null>(null);
-    // const [errorVerify, setErrorVerify] = useState<string | null>(null);
-    // const [verifyLoading, setVerifyLoading] = useState(false);
+export default function SignInPage() {
+//   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+//   const [signInWithCode, setSignInWithCode] = useState(false);
+  // const [verifyCode, setVerifyCode] = useState<string | null>(null);
+  // const [errorVerify, setErrorVerify] = useState<string | null>(null);
+  // const [verifyLoading, setVerifyLoading] = useState(false);
 
-    const router = useRouter();
-    const { signIn, loading } = useAuthStore();
+  const router = useRouter();
+  const { signIn, loading } = useAuthStore();
 
-    const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
-        resolver: zodResolver(loginSchema),
-    });
+  const {
+    handleSubmit,
+    reset,
+  } = useForm<FormData>({
+    resolver: zodResolver(loginSchema),
+  });
 
-    useEffect(() => {
-        reset();
-    }, [reset]);
+  useEffect(() => {
+    reset();
+  }, [reset]);
 
-    const onSubmit: SubmitHandler<FormData> = async (data) => {
-        setError(null);
-        try {
-            await signIn(data.email, data.password);
-            router.push('/dashboard');
-        } catch (error) {
-            console.error(error);
-            setError('Invalid email or password. Please try again.');
-        }
-    };
+  const onSubmit = async () => {
+    setError(null);
+    try {
+      await signIn("a@a.com", "123456789");
+      router.push("/dashboard");
+    } catch (error) {
+      console.error(error);
+      setError("Invalid email or password. Please try again.");
+    }
+  };
 
-    const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
-    return (
-        <div className="flex h-screen bg-gray-100">
-            <div className="m-auto w-full max-w-4xl h-[550px] bg-white shadow-2xl overflow-hidden rounded-lg">
-                <div className="flex h-full">
-                    <div className="flex-1 p-8 md:p-12 flex flex-col justify-center">
-                        <h2 className="mb-6 text-3xl font-bold text-primary">Welcome to EYE</h2>
-                        {error && <p className="mb-4 text-sm text-error">{error}</p>}
-                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                            {signInWithCode ? (
+  return (
+    <div className="flex h-screen bg-gray-100">
+      <div className="m-auto w-full max-w-4xl h-[550px] bg-white shadow-2xl overflow-hidden rounded-lg">
+        <div className="flex h-full">
+          <div className="flex-1 p-8 md:p-12 flex flex-col justify-center">
+            <h2 className="mb-6 text-3xl font-bold text-primary">
+              Welcome to EYE
+            </h2>
+            {error && <p className="mb-4 text-sm text-error">{error}</p>}
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              {/* {signInWithCode ? (
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700" htmlFor="code">
                                         Verification Code
@@ -125,8 +130,8 @@ const SignInComponent: React.FC = () => {
                                         {errors.password && <p className="mt-1 text-xs text-error">{errors.password.message}</p>}
                                     </div>
                                 </>
-                            )}
-                            <div className="flex items-center justify-between">
+                            )} */}
+              {/* <div className="flex items-center justify-between">
                                 <div className="text-sm">
                                     {signInWithCode === false ? (
                                         <button onClick={() => setSignInWithCode(true)} className="font-medium text-primary hover:text-primary-dark focus:outline-none focus:underline">
@@ -138,30 +143,30 @@ const SignInComponent: React.FC = () => {
                                         </button>
                                     )}
                                 </div>
-                            </div>
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                {loading ? 'Signing In...' : 'Sign In'}
-                            </button>
-                        </form>
-                    </div>
-                    <div className="hidden md:block w-1/2 relative">
-                        <Image
-                            src="/images/image.png"
-                            alt="Credit cards"
-                            layout="fill"
-                            objectFit="cover"
-                            quality={100}
-                            priority
-                        />
-                    </div>
-                </div>
-            </div>
+                            </div> */}
+              <button
+                // type="submit"
+                // type="submit"
+                onClick={async () => await onSubmit()}
+                disabled={loading}
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? "Signing In..." : "Sign In"}
+              </button>
+            </form>
+          </div>
+          <div className="hidden md:block w-1/2 relative">
+            <Image
+              src="/images/image.png"
+              alt="Credit cards"
+              layout="fill"
+              objectFit="cover"
+              quality={100}
+              priority
+            />
+          </div>
         </div>
-    );
-};
-
-export default SignInComponent;
+      </div>
+    </div>
+  );
+}
