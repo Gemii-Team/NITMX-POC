@@ -74,7 +74,7 @@ spec:
           - name: DB_PASS
             value: "AVNS_0W_OsqR7O2F-XOVZuk7"
           - name: DB_NAME
-            value: "defaultdb"
+            value: "pocdb"
           - name: DB_PORT
             value: "25060"
           - name: SMTP_USERNAME
