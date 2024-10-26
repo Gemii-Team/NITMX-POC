@@ -80,14 +80,14 @@ export default function SignInPage() {
               </form>
 
               {/* Additional Links */}
-              <div className="mt-6 text-center text-sm text-gray-500">
+              {/* <div className="mt-6 text-center text-sm text-gray-500">
                 <p>
-                  Don't have an account?
+                  Don\'t have an account?
                   <a href="#" className="text-primary hover:text-primary-focus font-medium">
                     Contact us
                   </a>
                 </p>
-              </div>
+              </div> */}
             </div>
           </div>
 
