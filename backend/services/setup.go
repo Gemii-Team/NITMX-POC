@@ -42,7 +42,7 @@ func SetUpFiber(db *gorm.DB) *fiber.App {
 }
 
 func SetUpDB() (*gorm.DB, error) {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai",
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=true TimeZone=Asia/Shanghai",
 		config.NewConfig().DB_HOST,
 		config.NewConfig().DB_USER,
 		config.NewConfig().DB_PASS,
