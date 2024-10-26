@@ -29,10 +29,10 @@ jobs:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
       - name: Build image frontend
-        run: docker build . --file ../frontend/Dockerfile --tag nitmx-poc-frontend --build-arg NODE_OPTIONS=--max-old-space-size=3500
+        run: docker build . --file ./frontend/Dockerfile --tag nitmx-poc-frontend --build-arg NODE_OPTIONS=--max-old-space-size=3500
 
       - name: Build image backend
-        run: docker build . --file ../backend/Dockerfile --tag nitmx-poc-backend --build-arg NODE_OPTIONS=--max-old-space-size=3500
+        run: docker build . --file ./backend/Dockerfile --tag nitmx-poc-backend --build-arg NODE_OPTIONS=--max-old-space-size=3500
 
 
       - name: Push image
