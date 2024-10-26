@@ -58,13 +58,13 @@ spec:
             limits:
               memory: "256Mi"
           ports:
-            - containerPort: 9999
+            - containerPort: 3000
           imagePullPolicy: Always
           env:
           - name: BUILD_TAG
             value: "<BUILD_TAG>"
           - name: PORT
-            value: "9999"
+            value: "3000"
           - name: SECRET
             value: "eW9kMTI7EVqZ7BH0b1GxtxtVLMMzZgdl"
           - name: DB_HOST
