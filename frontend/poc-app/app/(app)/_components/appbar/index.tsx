@@ -28,9 +28,9 @@ const AppBar: React.FC = () => {
     { name: "Settings", icon: Settings, href: "/settings" },
   ];
   return (
-    <header className="sticky top-0 z-50">
+    <header className="sticky top-0 justify-content-end z-50">
       {/* Main Navigation Bar */}
-      <div className="navbar bg-base-100 shadow-md">
+      <div className="navbar bg-base-100 justify-content-end shadow-md">
         {/* Mobile Menu Button */}
         <div className="flex-none lg:hidden">
           <button
@@ -46,28 +46,15 @@ const AppBar: React.FC = () => {
         </div>
 
         {/* Logo/Brand - Show on all screens */}
-        <div className="flex-1 px-2">
-          <span className="font-bold text-lg">Brand</span>
-        </div>
-
-        {/* Desktop Search Bar - Hidden on Mobile */}
-        <div className="flex-1 hidden lg:block">
-          <div className="form-control w-full max-w-xl mx-auto">
-            <div className="input-group">
-              <input
-                type="text"
-                placeholder="Search..."
-                className="input input-bordered w-full"
-              />
-              <button className="btn btn-square">
-                <Search className="h-5 w-5" />
-              </button>
-            </div>
+        {isMobileMenuOpen && (
+          <div className="flex-1 px-2">
+            <span className="font-bold text-lg">Brand</span>
           </div>
-        </div>
+        )}
+
 
         {/* Right Section Icons */}
-        <div className="flex-none gap-2">
+        <div className="flex-none justify-content-end gap-2">
           {/* Mobile Search Toggle */}
           <button
             className="btn btn-ghost btn-circle lg:hidden"
