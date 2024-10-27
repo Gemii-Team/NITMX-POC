@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { ThemeProvider } from "./components/ThemeProvider";
 import Head from "next/head";
@@ -38,7 +37,7 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <div className="flex flex-col min-h-screen">
-            <Navbar />
+            {/* <Navbar /> */}
             <main className="flex-grow">{children}</main>
             <Footer />
           </div>

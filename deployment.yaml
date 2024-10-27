@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nitmx-poc-frontend
+spec:
+  selector:
+    matchLabels:
+      app: nitmx-poc-frontend
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: nitmx-poc-frontend
+    spec:
+      containers:
+        - name:  nitmx-poc-frontend
+          image: registry.digitalocean.com/tcoinproject/nitmx-poc-frontend
+          resources:
+            requests:
+              memory: "128Mi"
+            limits:
+              memory: "256Mi"
+          ports:
+            - containerPort: 3000
+          imagePullPolicy: Always
+          env:
+          - name: BUILD_TAG
+            value: "<BUILD_TAG>"
+      imagePullSecrets:
+        - name: registry-tcoinproject
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nitmx-poc-backend
+spec:
+  selector:
+    matchLabels:
+      app: nitmx-poc-backend
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: nitmx-poc-backend
+    spec:
+      containers:
+        - name:  nitmx-poc-backend
+          image: registry.digitalocean.com/tcoinproject/nitmx-poc-backend
+          resources:
+            requests:
+              memory: "128Mi"
+            limits:
+              memory: "256Mi"
+          ports:
+            - containerPort: 3000
+          imagePullPolicy: Always
+          env:
+          - name: BUILD_TAG
+            value: "<BUILD_TAG>"
+          - name: PORT
+            value: "3000"
+          - name: SECRET
+            value: "eW9kMTI7EVqZ7BH0b1GxtxtVLMMzZgdl"
+          - name: DB_HOST
+            value: "db-postgresql-sgp1-43188-do-user-16485585-0.l.db.ondigitalocean.com"
+          - name: DB_USER
+            value: "doadmin"
+          - name: DB_PASS
+            value: "AVNS_0W_OsqR7O2F-XOVZuk7"
+          - name: DB_NAME
+            value: "defaultdb"
+          - name: DB_PORT
+            value: "25060"
+          - name: SMTP_USERNAME
+            value: "7cc245001@smtp-brevo.com"
+          - name: SMTP_PASS
+            value: "xsmtpsib-0b5c64f375cf88749a337fe77d73e8d96890bfe862aa03465e46c15b690c31f4-WIMkwPCZyxjhBOvr"
+          - name: SMTP_PORT
+            value: "587"
+          - name: SMTP_HOST
+            value: "smtp-relay.brevo.com"
+      imagePullSecrets:
+        - name: registry-tcoinproject
