@@ -1,5 +1,4 @@
 "use client";
-import { useState } from 'react';
 import Typewriter from 'typewriter-effect';
 import Image from 'next/image';
 import { FAQItem } from './_components/faq-item';
