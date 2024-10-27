@@ -3,17 +3,27 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useTheme } from '../ThemeProvider';
-import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+
+
 
 const Navbar = () => {
     const { theme, toggleTheme } = useTheme();
     const [activeSection, setActiveSection] = useState<string | null>(null);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const router = useRouter();
+
 
     const scrollToSection = (id: string) => {
         const element = document.getElementById(id);
         if (element) {
             element.scrollIntoView({ behavior: 'smooth' });
+            setIsMenuOpen(false); 
         }
+    };
+
+    const handleMenu = () => {
+        router.push("/signIn");
     };
 
     useEffect(() => {
@@ -22,13 +32,12 @@ const Navbar = () => {
             const scrollPosition = window.scrollY;
 
             sections.forEach((sec) => {
-                const offsetTop = sec.offsetTop - 1; 
+                const offsetTop = sec.offsetTop - 150;
                 const height = sec.offsetHeight;
                 const id = sec.getAttribute("id");
 
-               
                 if (scrollPosition >= offsetTop && scrollPosition < offsetTop + height) {
-                    setActiveSection(id); 
+                    setActiveSection(id);
                 }
             });
         };
@@ -40,53 +49,67 @@ const Navbar = () => {
     }, []);
 
     return (
-        <nav className="navbar bg-base-100 fixed top-0 w-full z-10">
+        <nav className="navbar bg-base-100 shadow-xl fixed top-0 w-full z-10">
             <div className="navbar-start">
                 <Link href="/" className="flex items-center justify-between space-x-4 text-3xl normal-case">
-                    <Image
-                        src="/images/eye.png"
-                        width={100}
-                        height={100}
-                        alt="logo"
-                        priority
-                    />
-                    <span>TEAM <strong className="text-primary">EYE</strong></span>
+                    <span><strong className="text-[#0062FF]">EYE.</strong></span>
                 </Link>
             </div>
-            <div className="navbar-center hidden lg:flex">
-                <ul className="menu menu-horizontal px-1">
-                    <li>
-                        <button onClick={() => { scrollToSection('home'); setActiveSection('home'); }}>
-                            <strong className={activeSection === 'home' ? 'text-accent' : 'text-base-content'}>Home</strong>
-                        </button>
-                    </li>
-                    <li>
-                        <button onClick={() => { scrollToSection('about'); setActiveSection('about'); }}>
-                            <strong className={activeSection === 'about' ? 'text-accent' : 'text-base-content'}>About</strong>
-                        </button>
-                    </li>
-                    <li>
-                        <button onClick={() => { scrollToSection('services'); setActiveSection('services'); }}>
-                            <strong className={activeSection === 'services' ? 'text-accent' : 'text-base-content'}>Services</strong>
-                        </button>
-                    </li>
-                    <li>
-                        <button onClick={() => { scrollToSection('docs'); setActiveSection('docs'); }}>
-                            <strong className={activeSection === 'docs' ? 'text-accent' : 'text-base-content'}>Docs</strong>
-                        </button>
-                    </li>
-                    <li>
-                        <button onClick={() => { scrollToSection('contact'); setActiveSection('contact'); }}>
-                            <strong className={activeSection === 'contact' ? 'text-accent' : 'text-base-content'}>Contact</strong>
-                        </button>
-                    </li>
-                </ul>
+
+
+            <div className="navbar-end lg:hidden">
+                <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="btn btn-square btn-ghost">
+                    {isMenuOpen ? '✖' : '☰'}
+                </button>
             </div>
-            <div className="navbar-end">
-                <button className="btn btn-square btn-ghost" onClick={toggleTheme}>
+
+
+            <div className={`navbar-center ${isMenuOpen ? "block" : "hidden"} lg:flex lg:flex-row`}>
+                {isMenuOpen && (
+                    <div className="w-full bg-base-200 shadow-md absolute top-full left-0 z-10">
+                        <ul className="flex flex-col items-center space-y-4 py-4">
+                            <li>
+                                <button onClick={() => scrollToSection('home')} className="text-lg">
+                                    <span className={activeSection === 'home' ? 'text-[#0062FF]' : ''}>Home</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onClick={() => scrollToSection('about')} className="text-lg">
+                                    <span className={activeSection === 'about' ? 'text-[#0062FF]' : ''}>About</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onClick={() => scrollToSection('services')} className="text-lg">
+                                    <span className={activeSection === 'services' ? 'text-[#0062FF]' : ''}>Services</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onClick={() => scrollToSection('faq')} className="text-lg">
+                                    <span className={activeSection === 'faq' ? 'text-[#0062FF]' : ''}>FAQ</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onClick={() => scrollToSection('contact')} className="text-lg">
+                                    <span className={activeSection === 'contact' ? 'text-[#0062FF]' : ''}>Contact</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button className="btn btn-square btn-ghost mr-4" onClick={toggleTheme}>
+                                    {theme === 'light' ? '🌙' : '☀️'}
+                                </button>
+                         
+                              <button className="btn btn-primary bg-transparent border border-primary text-primary hover:bg-primary hover:text-white" onClick={handleMenu}>Get Started</button>
+                            </li>
+                        </ul>
+                    </div>
+                )}
+            </div>
+
+            <div className="navbar-end hidden lg:flex">
+                <button className="btn btn-square btn-ghost mr-4" onClick={toggleTheme}>
                     {theme === 'light' ? '🌙' : '☀️'}
                 </button>
-                <button className="btn">Get Started</button>
+                <button className="btn btn-primary bg-transparent border border-primary text-primary hover:bg-primary hover:text-white" onClick={handleMenu} >Get Started</button>
             </div>
         </nav>
     );
