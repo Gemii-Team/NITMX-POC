@@ -46,7 +46,7 @@ export default function Alarm() {
                         <div className="modal-body">
                             <TransactionNetwork
                                 data={fraudTransactionNetwork}
-                                onNodeSelect={(nodeId) => console.log('Selected Node:', nodeId)}
+                                // onNodeSelect={(nodeId) => console.log('Selected Node:', nodeId)}
                             />
                         </div>
 

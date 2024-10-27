@@ -42,7 +42,7 @@ export default function DashboardPage() {
     fetchLatestTransaction();
   }, [fetchStat, fetchBarValue, fetchLatestTransaction]);
 
-  console.log(stat, merchant, latest);
+  // console.log(stat, merchant, latest);
 
   const paymentTypeData: ChartData[] = merchant?.data.map((item) => ({
     name: item.merchant_channel,

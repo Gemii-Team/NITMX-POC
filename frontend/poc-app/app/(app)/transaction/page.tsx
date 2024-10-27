@@ -49,7 +49,7 @@ export default function TransactionPage() {
                         <div className="modal-body">
                             <TransactionNetwork
                                 data={transactionGraph}
-                                onNodeSelect={(nodeId) => console.log('Selected Node:', nodeId)}
+                                // onNodeSelect={(nodeId) => console.log('Selected Node:', nodeId)}
                             />
                         </div>
 
