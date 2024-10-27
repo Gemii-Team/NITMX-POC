@@ -94,7 +94,7 @@ export const useTransaction = create<ITransactionStore>((set, get) => ({
 
             const url = `/transaction/list?${queryParams.toString()}`;
             const response: ITransactionResponse = await fetchClient(url);
-            console.log('response', response);
+            // console.log('response', response);
             if (response){
                 set({
                     transactions: response.data.map((transaction) => ({
