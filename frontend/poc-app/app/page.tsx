@@ -243,7 +243,7 @@ export default function Home() {
 
               <div className="max-w-xs rounded overflow-hidden shadow-xl  backdrop-blur-sm ">
                 <div className="flex justify-center items-center min-h-scree p-2 m-2">
-                  <Image
+                  <img
                     className="w-full h-auto max-w-sm rounded-full object-cover"
                     src="/card/pwave.jpg"
                     alt="Profile Image4"
